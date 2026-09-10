@@ -8,11 +8,11 @@ export const site = {
     eyebrow: 'A quiet corner of the internet',
     title: 'Good to see you here.',
     subtitle: 'Stay for a little while.',
-    note: 'Research · photography · notes · ordinary days',
+    note: 'Research · Coffee · Psychology',
   },
   about: [
     'I’m Shinji(昕霁). I study artificial intelligence and spend a lot of time thinking about how intelligent systems reason, remember, and interact with people.',
-    'Outside of research, I like photography, reading beyond my field, quiet walks, and finding beauty in ordinary days.',
+    'Outside of research, I like coffee, reading books beyond my field, quiet walks.',
   ],
   currently: [
     { label: 'learning', value: 'Agent runtime, Multi-agents system' },
@@ -24,7 +24,7 @@ export const site = {
   },
   social: [
     { label: 'Email', href: 'mailto:YOUR_EMAIL@example.com' },
-    { label: 'GitHub', href: 'https://github.com/YOUR_USERNAME' },
+    { label: 'GitHub', href: 'https://github.com/UNeverKnowBest' },
   ],
   footer: 'Thanks for being here. See you around.',
 } as const;
