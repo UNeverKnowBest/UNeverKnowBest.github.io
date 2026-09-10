@@ -1,0 +1,44 @@
+---
+import { getCollection } from 'astro:content';
+import SectionHeading from '../../shared/SectionHeading.astro';
+import { withBase } from '../../../utils/paths';
+
+const resolveHref = (href: string) => href.startsWith('/') ? withBase(href) : href;
+
+const linkItems = (links: { paper?: string; code?: string; poster?: string; project?: string }) => [
+  ['paper', links.paper],
+  ['code', links.code],
+  ['poster', links.poster],
+  ['project', links.project],
+] as const;
+
+const publications = (await getCollection('publications'))
+  .filter((entry) => entry.data.featured)
+  .sort((a, b) => b.data.order - a.data.order || b.data.year - a.data.year)
+  .slice(0, 2);
+---
+<section class="home-section shell section-grid" aria-labelledby="pub-heading">
+  <div class="section-label"><span class="section-kicker">04</span></div>
+  <div class="section-content">
+    <SectionHeading title="Publications" id="pub-heading" link={`${withBase('/cv')}#publications`} />
+    <div class="publication-list">
+      {publications.map((publication) => (
+        <article class="publication-row">
+          <p class="row-meta">{publication.data.year}</p>
+          <div>
+            <h3>{publication.data.title}</h3>
+            <p class="publication-authors">{publication.data.authors.join(', ')}</p>
+            <p class="publication-venue">{publication.data.venue}</p>
+            <div class="inline-links">
+              {linkItems(publication.data.links).map(([label, href]) => href && (
+                <a href={resolveHref(href)} target={href.startsWith('http') ? '_blank' : undefined} rel={href.startsWith('http') ? 'noreferrer' : undefined}>
+                  {label}
+                </a>
+              ))}
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>

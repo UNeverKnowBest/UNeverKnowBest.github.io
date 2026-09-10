@@ -1,0 +1,13 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { withBase } from '../utils/paths';
+import { site } from '../config/site';
+---
+<BaseLayout title={`Not found — ${site.name}`} description="Page not found.">
+  <section class="shell narrow-shell not-found">
+    <p class="eyebrow">404</p>
+    <h1>This page wandered off.</h1>
+    <p>There is nothing to fix here. You can return to the quiet part of the site.</p>
+    <a class="text-link" href={withBase('/')}>Back home →</a>
+  </section>
+</BaseLayout>

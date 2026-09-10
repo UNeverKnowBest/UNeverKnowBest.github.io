@@ -1,0 +1,15 @@
+---
+import SectionHeading from '../../shared/SectionHeading.astro';
+import { site } from '../../../config/site';
+---
+<section class="home-section shell section-grid" aria-labelledby="about-heading">
+  <div class="section-label">
+    <span class="section-kicker">01</span>
+  </div>
+  <div class="section-content">
+    <SectionHeading title="About" id="about-heading" />
+    <div class="about-copy">
+      {site.about.map((paragraph) => <p>{paragraph}</p>)}
+    </div>
+  </div>
+</section>

@@ -1,0 +1,24 @@
+---
+import { getCollection } from 'astro:content';
+import SectionHeading from '../../shared/SectionHeading.astro';
+import { withBase } from '../../../utils/paths';
+
+const notes = (await getCollection('notes'))
+  .filter((entry) => !entry.data.draft)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 3);
+---
+<section class="home-section shell section-grid" aria-labelledby="notes-heading">
+  <div class="section-label"><span class="section-kicker">05</span></div>
+  <div class="section-content">
+    <SectionHeading title="Recent notes" id="notes-heading" link={withBase('/notes')} />
+    <div class="note-list">
+      {notes.map((note) => (
+        <a class="note-row" href={withBase(`/notes/${note.id}`)}>
+          <time datetime={note.data.date.toISOString()}>{note.data.date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</time>
+          <span>{note.data.title}</span>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>

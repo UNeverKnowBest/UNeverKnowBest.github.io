@@ -1,0 +1,54 @@
+---
+import { contactLinks, site } from '../../config/site';
+import { withBase } from '../../utils/paths';
+import '../../styles/intro.css';
+---
+<div class="intro-sequence" data-intro>
+  <section class="narrative narrative-hero" id="home" data-scene="hero" aria-labelledby="hero-title">
+    <div class="narrative-copy hero-copy shell">
+      <p class="eyebrow reveal-line">{site.hero.eyebrow}</p>
+      <h1 id="hero-title" class="reveal-line">Good to see<br />you here<span class="title-period">.</span></h1>
+      <p class="hero-subtitle reveal-line">{site.hero.subtitle}</p>
+      <p class="hero-note reveal-line">{site.hero.note}</p>
+    </div>
+    <div class="scene-bottom shell">
+      <a class="scroll-cue" href="#about"><span>Scroll to explore</span><span aria-hidden="true">↓</span></a>
+      <span class="scene-caption">A moment, away from the noise.</span>
+    </div>
+  </section>
+  <section class="narrative narrative-about" id="about" data-scene="about" aria-labelledby="about-heading">
+    <div class="narrative-copy about-layout shell">
+      <div class="chapter-mark reveal-line"><span>01</span><span class="chapter-line"></span><span>A little about me</span></div>
+      <div class="about-body">
+        <h2 id="about-heading" class="reveal-line">About</h2>
+        <div class="about-copy">{site.about.map((paragraph) => <p class="reveal-line">{paragraph}</p>)}</div>
+        <a class="editorial-link reveal-line" href={withBase('/cv')}>My research &amp; CV <span class="link-rule"></span><span aria-hidden="true">↗</span></a>
+        <p class="editorial-aside reveal-line">Same places. A calmer mind.</p>
+      </div>
+    </div>
+    <div class="scene-bottom shell"><a class="scroll-cue" href="#connect"><span>A little further</span><span aria-hidden="true">↓</span></a></div>
+  </section>
+  <section class="narrative narrative-connect" id="connect" data-scene="connect" aria-labelledby="connect-heading">
+    <div class="narrative-copy connect-layout shell">
+      <div class="chapter-mark reveal-line"><span>02</span><span class="chapter-line"></span><span>A conversation, perhaps</span></div>
+      <div class="connect-body">
+        <h2 id="connect-heading" class="reveal-line">Connect</h2>
+        <p class="connect-invitation reveal-line">If something here resonates,<br />I’d be glad to hear from you.</p>
+        <div class="contact-list reveal-line">
+          {site.social.map((link) => contactLinks.some((available) => available.href === link.href)
+            ? <a class="contact-link" href={link.href} rel={link.href.startsWith('https:') ? 'me noreferrer' : undefined}><span>{link.label}</span><span class="link-rule"></span><span aria-hidden="true">→</span></a>
+            : <div class="contact-link contact-unavailable" aria-disabled="true"><span>{link.label}</span><span class="link-rule" aria-hidden="true"></span><span>Coming soon</span></div>)}
+          <a class="contact-link" href={withBase('/cv')}><span>Curriculum vitae</span><span class="link-rule"></span><span aria-hidden="true">→</span></a>
+        </div>
+        <p class="closing-line reveal-line">Different people,<br /><em>same sky.</em></p>
+      </div>
+    </div>
+    <div class="scene-bottom shell"><span class="scene-caption">The rain can stay a little longer.</span><a class="back-top" href="#home">Back to the beginning <span aria-hidden="true">↑</span></a></div>
+  </section>
+  <nav class="narrative-progress" aria-label="Introduction chapters">
+    <a href="#home" aria-label="Welcome" aria-current="location"><span></span><span class="progress-label">Welcome</span></a>
+    <a href="#about" aria-label="About"><span></span><span class="progress-label">About</span></a>
+    <a href="#connect" aria-label="Connect"><span></span><span class="progress-label">Connect</span></a>
+    <span class="progress-count" aria-hidden="true"><span data-chapter-number>01</span> / 03</span>
+  </nav>
+</div>

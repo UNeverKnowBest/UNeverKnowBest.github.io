@@ -1,0 +1,13 @@
+---
+type Props = {
+  title: string;
+  link?: string;
+  linkLabel?: string;
+  id?: string;
+};
+const { title, link, linkLabel = 'View all', id } = Astro.props;
+---
+<div class="section-heading">
+  <h2 id={id}>{title}</h2>
+  {link && <a href={link}>{linkLabel} <span aria-hidden="true">↗</span></a>}
+</div>

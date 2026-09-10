@@ -1,0 +1,31 @@
+---
+// Archived when the site was reduced to Home and CV.
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/shared/PageHeader.astro';
+
+const logs = (await getCollection('logs'))
+  .filter((entry) => !entry.data.draft)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const rendered = await Promise.all(logs.map(async (entry) => ({ entry, ...(await render(entry)) })));
+---
+<BaseLayout title="Log — Hugo Yu" description="Short, informal logs from Hugo Yu.">
+  <PageHeader
+    eyebrow="Small records"
+    title="Log"
+    description="Brief entries, unfinished thoughts, and ordinary days."
+  />
+
+  <section class="shell prose-shell log-list" aria-label="Logs">
+    {rendered.map(({ entry, Content }) => (
+      <article class="log-entry">
+        <time datetime={entry.data.date.toISOString()}>
+          {entry.data.date.toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' })}
+        </time>
+        {entry.data.title && <h2>{entry.data.title}</h2>}
+        <div class="prose compact-prose"><Content /></div>
+      </article>
+    ))}
+  </section>
+</BaseLayout>

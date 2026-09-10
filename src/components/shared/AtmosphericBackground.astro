@@ -1,0 +1,19 @@
+---
+import { atmosphere } from '../../config/atmosphere';
+import { withBase } from '../../utils/paths';
+---
+<div class="atmosphere" aria-hidden="true">
+  {Object.entries(atmosphere).map(([name, scene], index) => (
+    <div class={`atmosphere-scene atmosphere-${name}`} data-atmosphere={name}>
+      <picture>
+        <source media="(max-width: 768px)" srcset={withBase(scene.small)} />
+        <img src={withBase(scene.src)} alt="" width="1920" height="1080" style={`object-position: ${scene.position}`} fetchpriority={index === 0 ? 'high' : 'low'} loading={index === 0 ? 'eager' : 'lazy'} decoding="async" />
+      </picture>
+      <div class="scene-tint"></div>
+    </div>
+  ))}
+  <div class="atmosphere-mist"></div>
+  <div class="rain rain-far"></div>
+  <div class="rain rain-near"></div>
+  <div class="atmosphere-grain"></div>
+</div>

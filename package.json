@@ -1,0 +1,34 @@
+{
+  "name": "hugo-quiet-study",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "check": "astro check",
+    "build": "astro build",
+    "preview": "astro preview",
+    "test:content": "node scripts/validate-content.mjs",
+    "test:all": "npm run test:offline && npm run check && npm run build",
+    "new:pub": "node scripts/new-content.mjs publication",
+    "new:photo": "node scripts/new-content.mjs gallery",
+    "new:note": "node scripts/new-content.mjs note",
+    "new:log": "node scripts/new-content.mjs log",
+    "new:plugin": "node scripts/new-plugin.mjs",
+    "test:source": "node scripts/audit-source.mjs",
+    "test:offline": "npm run test:content && npm run test:source"
+  },
+  "dependencies": {
+    "@tailwindcss/vite": "4.3.3",
+    "astro": "7.2.9",
+    "tailwindcss": "4.3.3"
+  },
+  "devDependencies": {
+    "@astrojs/check": "0.9.10",
+    "typescript": "6.0.3"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  }
+}

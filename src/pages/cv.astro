@@ -1,0 +1,55 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/shared/PageHeader.astro';
+import { getCollection } from 'astro:content';
+import { cv } from '../config/cv';
+import { site } from '../config/site';
+import { withBase } from '../utils/paths';
+const work = (await getCollection('work')).sort((a, b) => b.data.order - a.data.order);
+const publications = (await getCollection('publications')).sort((a, b) => b.data.year - a.data.year);
+const hrefFor = (href: string) => href.startsWith('/') ? withBase(href) : href;
+---
+<BaseLayout title={`CV — ${site.name}`}>
+  <PageHeader eyebrow="Research & ordinary curiosity" title="Curriculum vitae." />
+  <div class="shell narrow-shell cv-page">
+    <section class="cv-section" aria-labelledby="education-heading">
+      <div class="cv-section-heading"><span>01</span><h2 id="education-heading">Education</h2></div>
+      <div class="cv-list">
+        {cv.education.map((item) => (
+          <article class="cv-row">
+            <p class="row-meta">{item.period}</p>
+            <div class="education-entry">
+              <img class="education-emblem" src={withBase(item.emblem)} alt={`${item.institution} emblem`} width="72" height="72" decoding="async" />
+              <div class="education-details">
+                <h3>{item.institution}</h3>
+                <p>{item.degree}</p>
+                <p>{item.detail}</p>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+    <section class="cv-section" aria-labelledby="interests-heading">
+      <div class="cv-section-heading"><span>02</span><h2 id="interests-heading">Research interests</h2></div>
+      <ul class="clean-list">{cv.interests.map((interest) => <li>{interest}</li>)}</ul>
+    </section>
+    <section class="cv-section" id="work" aria-labelledby="work-heading">
+      <div class="cv-section-heading"><span>03</span><h2 id="work-heading">Selected work</h2></div>
+      <div class="cv-list">
+        {work.map(({ data }) => <article class="cv-row"><p class="row-meta">{data.year}</p><div><h3>{data.href ? <a href={hrefFor(data.href)}>{data.title} ↗</a> : data.title}</h3><p>{data.summary}</p></div></article>)}
+      </div>
+    </section>
+    <section class="cv-section" id="publications" aria-labelledby="publications-heading">
+      <div class="cv-section-heading"><span>04</span><h2 id="publications-heading">Publications</h2></div>
+      <div class="cv-list">
+        {publications.map(({ data }) => <article class="cv-row"><p class="row-meta">{data.year}</p><div><h3>{data.title}</h3><p>{data.authors.join(', ')}</p><p>{data.venue}</p><p>{data.summary}</p><div class="inline-links">{Object.entries(data.links).map(([label, href]) => href && <a href={hrefFor(href)} rel={href.startsWith('https:') ? 'noreferrer' : undefined}>{label} ↗</a>)}</div></div></article>)}
+      </div>
+    </section>
+    <section class="cv-section" aria-labelledby="currently-heading">
+      <div class="cv-section-heading"><span>05</span><h2 id="currently-heading">Currently</h2></div>
+      <dl class="cv-list">{site.currently.map((item) => <div class="cv-row"><dt class="row-meta">{item.label}</dt><dd>{item.value}</dd></div>)}</dl>
+    </section>
+    <div class="cv-closing"><p>Curiosity, with a little room to wander.</p><a class="editorial-link" href={`${withBase('/')}#connect`}>Let’s connect <span class="link-rule"></span><span aria-hidden="true">→</span></a></div>
+  </div>
+</BaseLayout>

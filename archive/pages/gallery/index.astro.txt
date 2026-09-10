@@ -1,0 +1,35 @@
+---
+// Archived when the site was reduced to Home and CV.
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/shared/PageHeader.astro';
+import { withBase } from '../../utils/paths';
+
+const photos = (await getCollection('gallery')).sort(
+  (a, b) => b.data.order - a.data.order || b.data.date.valueOf() - a.data.date.valueOf(),
+);
+---
+<BaseLayout title="Gallery — Hugo Yu" description="A small photography portfolio by Hugo Yu.">
+  <PageHeader
+    eyebrow="Photography"
+    title="Gallery"
+    description="Photographs are my way of paying attention — to light, distance, streets, and moments that would otherwise pass quietly."
+  />
+
+  <section class="shell gallery-grid" aria-label="Photography portfolio">
+    {photos.map((photo) => (
+      <figure id={photo.id} class:list={['gallery-item', `aspect-${photo.data.aspect}`]}>
+        <a href={withBase(photo.data.image)} class="photo-link" target="_blank" rel="noreferrer">
+          <img src={withBase(photo.data.image)} alt={photo.data.alt} loading="lazy" decoding="async" />
+        </a>
+        <figcaption>
+          <div>
+            <h2>{photo.data.title}</h2>
+            <p>{photo.data.location}</p>
+          </div>
+          <p>{photo.data.year}</p>
+        </figcaption>
+      </figure>
+    ))}
+  </section>
+</BaseLayout>

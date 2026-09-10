@@ -1,0 +1,28 @@
+---
+// Archived when the site was reduced to Home and CV.
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { withBase } from '../../utils/paths';
+
+export async function getStaticPaths() {
+  const notes = (await getCollection('notes')).filter((entry) => !entry.data.draft);
+  return notes.map((entry) => ({ params: { id: entry.id }, props: { entry } }));
+}
+
+type Props = { entry: CollectionEntry<'notes'> };
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+---
+<BaseLayout title={`${entry.data.title} — Hugo Yu`} description={entry.data.description}>
+  <article class="shell prose-shell article-page">
+    <a class="back-link" href={withBase('/notes')}>← Notes</a>
+    <header class="article-header">
+      <time datetime={entry.data.date.toISOString()}>
+        {entry.data.date.toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' })}
+      </time>
+      <h1>{entry.data.title}</h1>
+      <p>{entry.data.description}</p>
+    </header>
+    <div class="prose"><Content /></div>
+  </article>
+</BaseLayout>

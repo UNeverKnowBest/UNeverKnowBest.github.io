@@ -1,0 +1,31 @@
+---
+import { getCollection } from 'astro:content';
+import SectionHeading from '../../shared/SectionHeading.astro';
+import { withBase } from '../../../utils/paths';
+
+const items = (await getCollection('work'))
+  .filter((item) => item.data.featured)
+  .sort((a, b) => b.data.order - a.data.order || b.data.year - a.data.year)
+  .slice(0, 3);
+---
+<section class="home-section shell section-grid" aria-labelledby="work-heading">
+  <div class="section-label"><span class="section-kicker">03</span></div>
+  <div class="section-content">
+    <SectionHeading title="Selected work" id="work-heading" />
+    <div class="editorial-list">
+      {items.map((item) => (
+        <article class="editorial-row">
+          <p class="row-meta">{item.data.year}</p>
+          <div>
+            {item.data.href ? (
+              <h3><a href={item.data.href.startsWith('/') ? withBase(item.data.href) : item.data.href}>{item.data.title}</a></h3>
+            ) : (
+              <h3>{item.data.title}</h3>
+            )}
+            <p>{item.data.summary}</p>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>

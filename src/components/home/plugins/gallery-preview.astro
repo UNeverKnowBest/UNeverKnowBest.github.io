@@ -1,0 +1,29 @@
+---
+import { getCollection } from 'astro:content';
+import SectionHeading from '../../shared/SectionHeading.astro';
+import { withBase } from '../../../utils/paths';
+
+const photos = (await getCollection('gallery'))
+  .filter((entry) => entry.data.featured)
+  .sort((a, b) => b.data.order - a.data.order || b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 2);
+---
+<section class="home-section shell section-grid" aria-labelledby="gallery-heading">
+  <div class="section-label"><span class="section-kicker">06</span></div>
+  <div class="section-content">
+    <SectionHeading title="From the gallery" id="gallery-heading" link={withBase('/gallery')} />
+    <div class="gallery-preview">
+      {photos.map((photo) => (
+        <figure>
+          <a href={withBase(`/gallery#${photo.id}`)} class="photo-link">
+            <img src={withBase(photo.data.image)} alt={photo.data.alt} loading="lazy" decoding="async" />
+          </a>
+          <figcaption>
+            <span>{photo.data.title}</span>
+            <small>{photo.data.location} · {photo.data.year}</small>
+          </figcaption>
+        </figure>
+      ))}
+    </div>
+  </div>
+</section>

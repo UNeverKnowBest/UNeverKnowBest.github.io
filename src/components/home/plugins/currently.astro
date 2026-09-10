@@ -1,0 +1,18 @@
+---
+import SectionHeading from '../../shared/SectionHeading.astro';
+import { site } from '../../../config/site';
+---
+<section class="home-section shell section-grid" aria-labelledby="currently-heading">
+  <div class="section-label"><span class="section-kicker">02</span></div>
+  <div class="section-content">
+    <SectionHeading title="Currently" id="currently-heading" />
+    <dl class="currently-list">
+      {site.currently.map((item) => (
+        <div class="currently-row">
+          <dt>{item.label}</dt>
+          <dd>{item.value}</dd>
+        </div>
+      ))}
+    </dl>
+  </div>
+</section>

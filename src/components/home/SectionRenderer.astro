@@ -1,0 +1,29 @@
+---
+import { homeSections } from '../../config/home';
+
+type Props = { exclude?: string[] };
+const { exclude = [] } = Astro.props;
+
+type AstroModule = { default: unknown };
+
+const modules = import.meta.glob('./plugins/*.astro', { eager: true }) as Record<string, AstroModule>;
+const plugins = new Map(
+  Object.entries(modules).map(([path, module]) => {
+    const id = path.split('/').pop()?.replace('.astro', '') ?? path;
+    return [id, module.default];
+  }),
+);
+
+const enabled = homeSections.filter((section) => section.enabled && !exclude.includes(section.id));
+const missing = enabled.filter((section) => !plugins.has(section.id));
+
+if (missing.length > 0) {
+  throw new Error(`Missing homepage plugin(s): ${missing.map((item) => item.id).join(', ')}`);
+}
+---
+<div class="home-sections">
+  {enabled.map((section) => {
+    const Component = plugins.get(section.id) as any;
+    return <Component />;
+  })}
+</div>

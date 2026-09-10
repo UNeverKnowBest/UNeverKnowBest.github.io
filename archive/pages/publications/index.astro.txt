@@ -1,0 +1,50 @@
+---
+// Archived; research and publications are now rendered in CV.
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/shared/PageHeader.astro';
+import { withBase } from '../../utils/paths';
+
+const resolveHref = (href: string) => href.startsWith('/') ? withBase(href) : href;
+
+const linkItems = (links: { paper?: string; code?: string; poster?: string; project?: string }) => [
+  ['paper', links.paper],
+  ['code', links.code],
+  ['poster', links.poster],
+  ['project', links.project],
+] as const;
+
+const publications = (await getCollection('publications')).sort(
+  (a, b) => b.data.year - a.data.year || b.data.order - a.data.order,
+);
+---
+<BaseLayout title="Publications — Hugo Yu" description="Research publications and selected academic work by Hugo Yu.">
+  <PageHeader
+    eyebrow="Research"
+    title="Publications"
+    description="Research notes, papers, posters, and work that I want to keep easy to find."
+  />
+
+  <section class="shell narrow-shell publication-index" aria-label="Publication list">
+    {publications.map((publication) => (
+      <article class="publication-card">
+        <div class="publication-card-meta">
+          <span>{publication.data.year}</span>
+          <span>{publication.data.venue}</span>
+        </div>
+        <div>
+          <h2>{publication.data.title}</h2>
+          <p class="publication-authors">{publication.data.authors.join(', ')}</p>
+          <p>{publication.data.summary}</p>
+          <div class="inline-links">
+            {linkItems(publication.data.links).map(([label, href]) => href && (
+              <a href={resolveHref(href)} target={href.startsWith('http') ? '_blank' : undefined} rel={href.startsWith('http') ? 'noreferrer' : undefined}>
+                {label}
+              </a>
+            ))}
+          </div>
+        </div>
+      </article>
+    ))}
+  </section>
+</BaseLayout>
