@@ -12,35 +12,37 @@ permissions:
 
 concurrency:
   group: pages
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   build:
+    name: Build Astro
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout source
+        uses: actions/checkout@v7
+
+      - name: Install, check, build and upload
+        uses: withastro/action@v6
         with:
-          node-version: 22
-      - run: npm install
-      - run: npm run test:content
-      - run: npm run check
-      - run: npm run build
+          path: .
+          node-version: 24
+          build-cmd: npm run test:all
         env:
           SITE_URL: ${{ vars.SITE_URL || format('https://{0}.github.io', github.repository_owner) }}
           BASE_PATH: ${{ vars.BASE_PATH || '/' }}
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./dist
 
   deploy:
+    name: Deploy website
+    needs: build
+    runs-on: ubuntu-latest
+
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build
+
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
